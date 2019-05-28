@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     Recycler recycler;
 
     MuseoAPI API;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +34,14 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recycler = new Recycler(this);
         recyclerView.setAdapter(recycler);
+
+
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Cargando...");
+        progressDialog.setMessage("Consultando al servidor de la DIBA");
+        progressDialog.setCancelable(false);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.show();
 
         API = MuseoAPI.retrofit.create(MuseoAPI.class);
         getData();
@@ -50,7 +59,9 @@ public class MainActivity extends AppCompatActivity {
                     Museums museums = response.body();
                     data = museums.getElements();
                     recycler.addElements(data);
+                    progressDialog.hide();
                 } else {
+                    progressDialog.hide();
                     AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
 
                     alertDialogBuilder
@@ -67,13 +78,14 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Museums> call, Throwable t) {
+                progressDialog.hide();
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
 
                 alertDialogBuilder
                         .setTitle("Error")
                         .setMessage(t.getMessage())
                         .setCancelable(false)
-                        .setPositiveButton("OK", (dialog, which) -> finish());
+                        .setPositiveButton("OK", (dialog, which) -> closeContextMenu());
 
                 AlertDialog alertDialog = alertDialogBuilder.create();
                 alertDialog.show();
