@@ -1,6 +1,7 @@
 package upc.dsa.dsa_minimo2;
 
 import android.app.AlertDialog;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -40,8 +41,10 @@ public class MainActivity extends AppCompatActivity {
         progressDialog.setTitle("Cargando...");
         progressDialog.setMessage("Consultando al servidor de la DIBA");
         progressDialog.setCancelable(false);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         progressDialog.show();
+
+
 
         API = MuseoAPI.retrofit.create(MuseoAPI.class);
         getData();
